@@ -1,13 +1,8 @@
 package com.douglassantos.cursomc;
 
-import com.douglassantos.cursomc.domain.Categoria;
-import com.douglassantos.cursomc.domain.Cidade;
-import com.douglassantos.cursomc.domain.Estado;
-import com.douglassantos.cursomc.domain.Produto;
-import com.douglassantos.cursomc.repositories.CategoriaRepository;
-import com.douglassantos.cursomc.repositories.CidadeRepository;
-import com.douglassantos.cursomc.repositories.EstadoRepository;
-import com.douglassantos.cursomc.repositories.ProdutoRepository;
+import com.douglassantos.cursomc.domain.*;
+import com.douglassantos.cursomc.domain.enums.TipoCliente;
+import com.douglassantos.cursomc.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -26,6 +21,11 @@ public class CursomcApplication implements CommandLineRunner {
     private EstadoRepository estadoRepository;
     @Autowired
     private CidadeRepository cidadeRepository;
+    @Autowired
+    private EnderecoRepository enderecoRepository;
+    @Autowired
+    private ClienteRepository clienteRepository;
+
 
     public static void main(String[] args) {
         SpringApplication.run(CursomcApplication.class, args);
@@ -63,5 +63,15 @@ public class CursomcApplication implements CommandLineRunner {
         estadoRepository.saveAll(Arrays.asList(est1, est2));
         cidadeRepository.saveAll(Arrays.asList(c1, c2, c3));
 
+        Cliente cli1 = new Cliente(null, "Maria Silva", "Maria@gmail.com", "3645445444", TipoCliente.PESSOAFISICA);
+        cli1.getTelefones().addAll(Arrays.asList("2121212121212112","54545454454545"));
+
+        Endereco e1 = new Endereco(null, "Rua Flores", "300", "Apto 303", "Jardim", "323236645", cli1, c1);
+        Endereco e2 = new Endereco(null, "Av. Matos", "105", "Sala 800", "Centro", "844845154", cli1, c2);
+
+        cli1.getEnderecos().addAll(Arrays.asList(e1, e2));
+
+        clienteRepository.save(cli1);
+        enderecoRepository.saveAll(Arrays.asList(e1,e2));
     }
 }
