@@ -3,8 +3,10 @@ package com.douglassantos.cursomc.services;
 import com.douglassantos.cursomc.domain.Categoria;
 
 import com.douglassantos.cursomc.repositories.CategoriaRepository;
+import com.douglassantos.cursomc.services.exceptions.DataIntegrityServiceException;
 import com.douglassantos.cursomc.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -29,5 +31,15 @@ public class CategoriaService {
     public Categoria update(Categoria categoria){
         find(categoria.getId());
         return categoriaRepository.save(categoria);
+    }
+
+    public void delete(Integer id){
+        find(id);
+        try {
+            categoriaRepository.deleteById(id);
+        }catch (DataIntegrityViolationException e){
+            throw  new DataIntegrityServiceException("Não é possível excluir uma categoria que possui produtos associados.");
+        }
+
     }
 }
