@@ -2,6 +2,7 @@ package com.douglassantos.cursomc.services;
 
 import com.douglassantos.cursomc.domain.Categoria;
 
+import com.douglassantos.cursomc.domain.Cliente;
 import com.douglassantos.cursomc.dto.CategoriaDTO;
 import com.douglassantos.cursomc.repositories.CategoriaRepository;
 import com.douglassantos.cursomc.services.exceptions.DataIntegrityServiceException;
@@ -34,8 +35,9 @@ public class CategoriaService {
     }
 
     public Categoria update(Categoria categoria){
-        find(categoria.getId());
-        return categoriaRepository.save(categoria);
+        Categoria newCategoria = find(categoria.getId());
+        upDateData(newCategoria, categoria);
+        return categoriaRepository.save(newCategoria);
     }
 
     public void delete(Integer id){
@@ -58,5 +60,9 @@ public class CategoriaService {
 
     public Categoria fromDTO(CategoriaDTO categoriaDTO){
         return new Categoria(categoriaDTO.getId(), categoriaDTO.getNome());
+    }
+
+    private void upDateData(Categoria newCategoria, Categoria obj){
+        newCategoria.setNome(obj.getNome());
     }
 }
